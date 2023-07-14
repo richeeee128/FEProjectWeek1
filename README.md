@@ -20,10 +20,3 @@
 ┗ Router.js : 라우터 설정 컴포넌트
 ```
 
-=======
-
-# FEProjectWeek1
-
-주특기 프로젝트 week.1
-
-> > > > > > > a77b3d84010ddabcf49867db9325e64d413d98f2
