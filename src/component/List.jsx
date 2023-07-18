@@ -55,7 +55,11 @@ function List() {
                 <img src={post.image} alt='' />
               </h1>
               <h2>{post.title}</h2>
-              <h4>{post.content}</h4>
+              <h4>
+                {post.content.length > 200
+                  ? `${post.content.slice(0, 200)} ...더보기`
+                  : post.content}
+              </h4>
               <p>{post.username}</p>
               <p>{post.liked} ❤️</p>
             </div>
