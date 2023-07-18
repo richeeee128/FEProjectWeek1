@@ -4,6 +4,7 @@ import Main from '../component/Main';
 import Detail from '../component/Detail';
 import Login from '../component/Login';
 import Signup from '../component/Signup';
+import DetailForm from '../component/DetailForm';
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
         <Route path='/:id' element={<Detail />} />
         <Route path='/auth/login' element={<Login />} />
         <Route path='/auth/signup' element={<Signup />} />
+        <Route path='/newpost' element={<DetailForm />} />
       </Routes>
     </BrowserRouter>
   );
