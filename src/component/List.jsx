@@ -50,7 +50,6 @@ function List() {
   useEffect(() => {
     if (!isLoading && !error) {
       setPosts((prevPosts) => [...prevPosts, ...data]);
-      console.log('범인이 너냐?');
     }
   }, [data, isLoading, error]);
 
@@ -99,7 +98,9 @@ function List() {
             </ListBox>
           ))}
       </Wrapper>
-      <Btn onClick={fetchMoreData}>항목 더보기</Btn>
+      <Btnbox>
+        <MoreBtn onClick={fetchMoreData}>항목 더보기</MoreBtn>
+      </Btnbox>
     </>
   );
 }
@@ -107,26 +108,10 @@ function List() {
 export default List;
 
 const Wrapper = styled.div`
-  width: 95vw;
+  width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  gap: 5%;
-  margin: 0 auto;
-`;
-
-const Btn = styled.button`
-  width: 100px;
-  height: 30px;
-  border: none;
-  margin: 10px;
-  background-color: #13f8e2;
-  &:hover {
-    background-color: #05ad9d;
-  }
-  &:active {
-    background-color: #17675f;
-    color: #fff;
-  }
+  justify-content: space-around;
 `;
 
 const ListBox = styled.div`
@@ -145,8 +130,50 @@ const ListBox = styled.div`
     margin-top: 0px;
   }
   img {
-    max-width: 400px;
-    max-height: 260px;
+    width: 400px;
+    height: 260px;
+    object-fit: cover;
     margin-bottom: -10px;
+  }
+`;
+
+const Btn = styled.button`
+  width: 100px;
+  height: 40px;
+  border: none;
+  margin-right: 50px;
+  float: right;
+  font-weight: bold;
+  font-size: 1rem;
+
+  background-color: #13f8e2;
+  &:hover {
+    background-color: #05ad9d;
+  }
+  &:active {
+    background-color: #17675f;
+    color: #fff;
+  }
+`;
+
+const Btnbox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const MoreBtn = styled.button`
+  width: 300px;
+  height: 40px;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 30px;
+  background-color: #13f8e2;
+  &:hover {
+    background-color: #05ad9d;
+  }
+  &:active {
+    background-color: #17675f;
+    color: #fff;
   }
 `;

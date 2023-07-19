@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import instunce from '../api/post';
 
@@ -60,7 +60,9 @@ function Login() {
         </InputBox>
         <BtnBox>
           <Button type='submit'>로그인</Button>
-          {/* <Link to='/auth/signup'>회원가입</Link> */}
+          <Link to='/auth/signup'>
+            <Button>회원가입</Button>
+          </Link>
         </BtnBox>
       </LoginForm>
     </Wrapper>
