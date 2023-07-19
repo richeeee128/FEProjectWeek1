@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 function Header() {
   return (
     <div>
       <HeaderStyle>
-        <h2 className="header-title">GG 게임 리뷰</h2>
+        <h2 className='header-title'> GG 게임 리뷰</h2>
       </HeaderStyle>
     </div>
   );
@@ -22,15 +22,15 @@ const HeaderStyle = styled.header`
   text-align: center;
   color: white;
   @font-face {
-    font-family: "SDSamliphopangche_Outline";
-    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff")
-      format("woff");
+    font-family: 'SDSamliphopangche_Outline';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff')
+      format('woff');
     font-weight: normal;
     font-style: normal;
   }
 
   .header-title {
-    font-family: "SDSamliphopangche_Outline";
+    font-family: 'SDSamliphopangche_Outline';
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;

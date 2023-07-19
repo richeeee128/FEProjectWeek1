@@ -1,38 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import api from "../api/post";
-import styled from "styled-components";
-import Header from "./Header";
-import CommentForm from "./CommentForm";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../api/post';
+import styled from 'styled-components';
+import Header from './Header';
+import CommentForm from './CommentForm';
 
 const Detail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [post, setPost] = useState([]);
   const [commentValue, setCommentValue] = useState({
-    content: "",
+    content: '',
   });
   const [updateCommentValue, setUpdateCommentValue] = useState({
-    content: "",
+    content: '',
   });
-  // const fetchPost = async () => {
-  //   const { data } = await api.get(`/post`);
-  //   console.log("data", data);
-  //   setPost(data);
-  // };
-
-  // useEffect(() => {
-  //   //db 로부터 값을 가져올 것이다.
-  //   fetchPost();
-  // }, []);
 
   const fetchPost = async () => {
     try {
       const response = await api.get(`/post/${id}`);
-      console.log("reponse.data.data", response.data.data);
-      setPost(response.data.data);
+      console.log('reponse.data.data', response.data.info);
+      setPost(response.data.info);
     } catch (error) {
-      console.error("API 요청 오류:", error);
+      console.error('API 요청 오류:', error);
     }
   };
   useEffect(() => {
@@ -48,39 +38,14 @@ const Detail = () => {
   };
 
   const handleGoBackPage = (id) => {
-    if (id === "1") {
-      alert("첫번째 페이지입니다!");
+    if (id === '1') {
+      alert('첫번째 페이지입니다!');
       return; // 첫 번째 요소이면 함수 실행을 중지하고 종료합니다.
     } else {
       const previousId = parseInt(id) - 1;
       navigate(`/detail/${previousId}`);
     }
   };
-
-  // // 객체의 모든 id 값들을 배열로 추출
-  // const ids = Object.values(post).map((post) => post.id);
-
-  // // 가장 큰 id 값을 구함
-  // const maxId = ids.length > 0 ? Math.max(...ids) : 0;
-
-  // console.log("maxId", maxId); // 가장 큰 id 값을 출력합니다.
-
-  // const handleNextPage = (id) => {
-  //   const nextId = parseInt(id) + 1;
-  //   const lastPostId = post[post.length - 1].id;
-
-  //   if (id === lastPostId) {
-  //     alert("마지막 페이지입니다!");
-  //     return;
-  //   }
-
-  //   navigate(`/detail/${nextId}`);
-  // };
-
-  //확인용
-  // console.log("post.commentList", post.commentList);
-  // console.log("post", post);
-  // console.log("commentValue", commentValue);
 
   // 댓글폼 제출
   const onSUbmitHandler = async (e) => {
@@ -92,42 +57,42 @@ const Detail = () => {
       console.log(res);
       // setCommentValue("");
     } catch (error) {
-      console.error("코멘트API Post 요청 오류:", error);
+      console.error('코멘트API Post 요청 오류:', error);
     }
   };
 
   //댓글 삭제함수
   const onDeleteComment = async ({ commentId }) => {
-    console.log("commentId", commentId);
+    console.log('commentId', commentId);
     if (commentId === undefined) {
-      console.error("삭제할 댓글이 유효하지 않습니다.");
+      console.error('삭제할 댓글이 유효하지 않습니다.');
       return;
     }
     try {
       await api.delete(`/post/${id}/comment/${commentId}`);
-      console.log("삭제되었습니다!");
+      console.log('삭제되었습니다!');
     } catch (error) {
-      alert("댓글에 대한 권한이 없습니다.");
-      console.error("댓글 삭제 오류:", error);
+      alert('댓글에 대한 권한이 없습니다.');
+      console.error('댓글 삭제 오류:', error);
     }
   };
 
   //댓글 수정함수
   const onUpdateComment = async ({ commentId }) => {
-    console.log("수정할 commentId", commentId);
-    console.log("페이지 id", id);
+    console.log('수정할 commentId', commentId);
+    console.log('페이지 id', id);
     if (commentId === undefined) {
-      console.error("수정할 댓글이 유효하지 않습니다.");
+      console.error('수정할 댓글이 유효하지 않습니다.');
       return;
     }
     try {
-      const updatedCommentValue = { content: "수정할 댓글의 내용" };
+      const updatedCommentValue = { content: '수정할 댓글의 내용' };
       setUpdateCommentValue(updatedCommentValue);
       await api.put(`/post/${id}/comment/${commentId}`, updateCommentValue);
-      console.log("수정되었습니다!");
+      console.log('수정되었습니다!');
     } catch (error) {
-      alert("댓글에 대한 권한이 없습니다.");
-      console.error("댓글 수정 오류:", error);
+      alert('댓글에 대한 권한이 없습니다.');
+      console.error('댓글 수정 오류:', error);
     }
   };
   //state로 값이 저장되있어 async(id,contents)로 안 받아도 됨
@@ -140,23 +105,23 @@ const Detail = () => {
           <div>
             <button onClick={() => handleGoBackPage(id)}>이전 페이지</button>
             {/* <button onClick={() => handleNextPage(id)}>다음 페이지</button> */}
-            <a href="#" className="button" onClick={handlePostClick}>
+            <a href='#' className='button' onClick={handlePostClick}>
               글 목록으로 돌아가기
             </a>
             <SectionStyle>
               <h1>
-                <img src={post.image} alt="" />
+                <img src={post.image} alt='' />
               </h1>
-              <h2 className="post-title">{post.title}</h2>
-              <p className="post-author">작성자: {post.username}</p>
-              <p className="post-date">작성일: {post.createdAt}</p>
-              <div className="post-content">
+              <h2 className='post-title'>{post.title}</h2>
+              <p className='post-author'>작성자: {post.username}</p>
+              <p className='post-date'>작성일: {post.createdAt}</p>
+              <div className='post-content'>
                 <p>{post.content}</p>
               </div>
             </SectionStyle>
             <CommentFormBoxStyle>
               <CommentFormStyle
-                className="comment-form"
+                className='comment-form'
                 onSubmit={(e) => {
                   // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
                   onSUbmitHandler(e);
@@ -165,9 +130,9 @@ const Detail = () => {
                 <div>
                   {/*수정 영역*/}
                   <textarea
-                    className="textarea"
-                    type="text"
-                    placeholder="수정할 내용을 작성해주세요...✨"
+                    className='textarea'
+                    type='text'
+                    placeholder='수정할 내용을 작성해주세요...✨'
                     // ={changeHandler}
                     onChange={(e) => {
                       setUpdateCommentValue({
@@ -175,14 +140,14 @@ const Detail = () => {
                       });
                     }}
                   ></textarea>
-                  <button type="submit">수정</button>
+                  <button type='submit'>수정</button>
                 </div>
               </CommentFormStyle>
             </CommentFormBoxStyle>
 
             <CommentFormBoxStyle>
               <CommentFormStyle
-                className="comment-form"
+                className='comment-form'
                 onSubmit={(e) => {
                   // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
                   onSUbmitHandler(e);
@@ -191,9 +156,9 @@ const Detail = () => {
                 <div>
                   {/*입력 영역*/}
                   <textarea
-                    className="textarea"
-                    type="text"
-                    placeholder="댓글을 작성해주세요...✨"
+                    className='textarea'
+                    type='text'
+                    placeholder='댓글을 작성해주세요...✨'
                     // ={changeHandler}
                     onChange={(e) => {
                       setCommentValue({
@@ -201,7 +166,7 @@ const Detail = () => {
                       });
                     }}
                   ></textarea>
-                  <button type="submit">댓글 작성</button>
+                  <button type='submit'>댓글 작성</button>
                 </div>
               </CommentFormStyle>
             </CommentFormBoxStyle>
@@ -210,14 +175,14 @@ const Detail = () => {
               {post.commentList &&
                 post.commentList.map((comment) => (
                   <>
-                    <div className="comment" key={comment.id}>
-                      <p className="comment-author">
+                    <div className='comment' key={comment.id}>
+                      <p className='comment-author'>
                         작성자:{comment.username}
                       </p>
-                      <p className="comment-date">
+                      <p className='comment-date'>
                         작성일: {comment.createdAt}
                       </p>
-                      <div className="comment-content">{comment.content}</div>
+                      <div className='comment-content'>{comment.content}</div>
                     </div>
                     <button
                       onClick={() => {

@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';i
-mport axios from "axios";
-import api from "../api/post";
+import { useNavigate } from 'react-router-dom';
 import instance from '../api/post';
 import { useQuery } from 'react-query';
 
 function List() {
   const [posts, setPosts] = useState([]);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [page, setPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
 
   const handleBtnClick = () => {
@@ -17,23 +14,10 @@ function List() {
       navigate('/auth/login');
       alert('로그인 되지 않은 사용자입니다.');
     } else {
-      navigate('/newpost');
+      navigate('/write');
       console.log('로그인 중입니다');
     }
   };
-
-  // 전체 리스트
-  const { post } = useQuery({
-    queryFn: async () => {
-      try {
-        const { data } = await instance.get(`/post`);
-        setPosts(data.data.content);
-        console.log('data', data.data.content);
-      } catch (error) {
-        console.log('Error fetching posts:', error);
-      }
-    },
-  });
 
   // 클릭시 상세 페이지로 이동
   const handlePostClick = (id) => {
@@ -41,10 +25,44 @@ function List() {
     navigate(`/detail/${id}`);
   };
 
-  const onAddPageHanlder = () => {
-    console.log(post);
-    setShowMore;
+  //백에서 데이터를 받아 페이지네이션을 함
+  const { data, isLoading, error } = useQuery(
+    ['posts', currentPage],
+    async () => {
+      try {
+        const response = await instance.get(`/post`, {
+          // 페이지
+          params: {
+            page: currentPage,
+            // 불러오고 싶은 페이지 개수
+            pageSize: 6,
+          },
+        });
+        console.log('페이지네이션', response);
+        return response.data.info.content;
+      } catch (error) {
+        console.log('페이징을 불러올 수 없습니다.', error);
+      }
+    }
+  );
+
+  // 로딩과 에러가 없으면 이전 포스트들과 데이터를 합침
+  useEffect(() => {
+    if (!isLoading && !error) {
+      setPosts((prevPosts) => [...prevPosts, ...data]);
+      console.log('범인이 너냐?');
+    }
+  }, [data, isLoading, error]);
+
+  // useEffect(() => {
+  //   setPosts();
+  // }, []);
+
+  // 버튼 클릭시 페이지에 1을 더함
+  const fetchMoreData = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
   };
+
   return (
     <>
       <div>
@@ -71,7 +89,7 @@ function List() {
                 </h1>
                 <h2>{post.title}</h2>
                 <h4>
-                  {post.content.length > 200
+                  {post.content.length > 100
                     ? `${post.content.slice(0, 65)} ...더보기`
                     : post.content}
                 </h4>
@@ -81,7 +99,7 @@ function List() {
             </ListBox>
           ))}
       </Wrapper>
-      <button onClick={() => onAddPageHanlder()}>항목 더보기</button>
+      <Btn onClick={fetchMoreData}>항목 더보기</Btn>
     </>
   );
 }
@@ -89,12 +107,11 @@ function List() {
 export default List;
 
 const Wrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-  border: 1px solid #000;
+  width: 95vw;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  gap: 5%;
+  margin: 0 auto;
 `;
 
 const Btn = styled.button`
@@ -119,7 +136,7 @@ const ListBox = styled.div`
   padding: 10px;
   margin: 20px 0;
   color: #4a3f6f;
-  border: 2px solid #eee;
+  border: 2px solid #3adfce;
   box-shadow: 6px 6px 2px 1px rgba(19, 248, 225, 0.481);
   display: flex;
   justify-content: center;
@@ -129,5 +146,7 @@ const ListBox = styled.div`
   }
   img {
     max-width: 400px;
+    max-height: 260px;
+    margin-bottom: -10px;
   }
 `;
