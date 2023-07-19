@@ -16,7 +16,7 @@ function List() {
   const handleBtnClick = () => {
     if (localStorage.getItem('authorization') === null) {
       navigate('/auth/login');
-      console.log('로그인 하고 오세요');
+      alert('로그인 되지 않은 사용자입니다.');
     } else {
       navigate('/newpost');
       console.log('로그인 중입니다');
@@ -42,6 +42,9 @@ function List() {
     navigate(`/detail/${id}`);
   };
 
+  const onAddPageHanlder = () => {
+    console.log(post);
+  };
   return (
     <>
       <div>
@@ -57,12 +60,19 @@ function List() {
               }}
             >
               <h1>
-                <img src={post.image} alt='' />
+                {post.image == '' ? (
+                  <img
+                    src='https://cdn.pixabay.com/photo/2021/12/30/12/09/gaming-computer-6903836_1280.jpg'
+                    alt='이미지가 존재하지 않습니다.'
+                  />
+                ) : (
+                  <img src={post.image} alt='' />
+                )}
               </h1>
               <h2>{post.title}</h2>
               <h4>
                 {post.content.length > 200
-                  ? `${post.content.slice(0, 200)} ...더보기`
+                  ? `${post.content.slice(0, 65)} ...더보기`
                   : post.content}
               </h4>
               <p>{post.username}</p>
@@ -71,6 +81,7 @@ function List() {
           </ListBox>
         ))}
       </Wrapper>
+      <button onClick={() => onAddPageHanlder()}>항목 더보기</button>
     </>
   );
 }
@@ -108,9 +119,14 @@ const ListBox = styled.div`
   padding: 10px;
   margin: 20px 0;
   color: #4a3f6f;
-  border: 2px solid red;
+  border: 2px solid #eee;
+  box-shadow: 6px 6px 2px 1px rgba(19, 248, 225, 0.481);
   display: flex;
   justify-content: center;
+  h1 {
+    text-align: center;
+    margin-top: 0px;
+  }
   img {
     max-width: 400px;
   }
