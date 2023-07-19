@@ -1,17 +1,16 @@
-
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';i
+mport axios from "axios";
 import api from "../api/post";
 import instance from '../api/post';
 import { useQuery } from 'react-query';
 
-
 function List() {
   const [posts, setPosts] = useState([]);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [page, setPage] = useState(0);
   const navigate = useNavigate();
-
 
   const handleBtnClick = () => {
     if (localStorage.getItem('authorization') === null) {
@@ -38,12 +37,13 @@ function List() {
 
   // 클릭시 상세 페이지로 이동
   const handlePostClick = (id) => {
-    console.log("상세페이지", id);
+    console.log('상세페이지', id);
     navigate(`/detail/${id}`);
   };
 
   const onAddPageHanlder = () => {
     console.log(post);
+    setShowMore;
   };
   return (
     <>
@@ -53,33 +53,33 @@ function List() {
       <Wrapper>
         {posts &&
           posts.map((post) => (
-          <ListBox key={post.id}>
-            <div
-              onClick={() => {
-                handlePostClick(post.id);
-              }}
-            >
-              <h1>
-                {post.image == '' ? (
-                  <img
-                    src='https://cdn.pixabay.com/photo/2021/12/30/12/09/gaming-computer-6903836_1280.jpg'
-                    alt='이미지가 존재하지 않습니다.'
-                  />
-                ) : (
-                  <img src={post.image} alt='' />
-                )}
-              </h1>
-              <h2>{post.title}</h2>
-              <h4>
-                {post.content.length > 200
-                  ? `${post.content.slice(0, 65)} ...더보기`
-                  : post.content}
-              </h4>
-              <p>{post.username}</p>
-              <p>{post.liked} ❤️</p>
-            </div>
-          </ListBox>
-        ))}
+            <ListBox key={post.id}>
+              <div
+                onClick={() => {
+                  handlePostClick(post.id);
+                }}
+              >
+                <h1>
+                  {post.image === '' ? (
+                    <img
+                      src='https://cdn.pixabay.com/photo/2021/12/30/12/09/gaming-computer-6903836_1280.jpg'
+                      alt='이미지가 존재하지 않습니다.'
+                    />
+                  ) : (
+                    <img src={post.image} alt='' />
+                  )}
+                </h1>
+                <h2>{post.title}</h2>
+                <h4>
+                  {post.content.length > 200
+                    ? `${post.content.slice(0, 65)} ...더보기`
+                    : post.content}
+                </h4>
+                <p>{post.username}</p>
+                <p>{post.liked} ❤️</p>
+              </div>
+            </ListBox>
+          ))}
       </Wrapper>
       <button onClick={() => onAddPageHanlder()}>항목 더보기</button>
     </>
