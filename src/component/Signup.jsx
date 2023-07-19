@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import instance from '../api/post';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import instance from "../api/post";
 
 function Signup() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     if (username && password) {
       try {
-        await instance.post('auth/signup', {
+        await instance.post("auth/signup", {
           username,
           password,
         });
 
-        setUsername('');
-        setPassword('');
-        navigate('/auth/login');
+        setUsername("");
+        setPassword("");
+        navigate("/auth/login");
       } catch (error) {
         console.log(error);
       }
@@ -32,23 +32,23 @@ function Signup() {
         <h1>회원가입</h1>
         <InputBox>
           <Input
-            type='text'
-            placeholder='아이디를 입력해주세요.'
+            type="text"
+            placeholder="아이디를 입력해주세요."
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <Input
-            type='password'
-            placeholder='비밀번호를 입력해주세요.'
+            type="password"
+            placeholder="비밀번호를 입력해주세요."
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </InputBox>
         <BtnBox>
-          <Button type='submit'>가입하기</Button>
-          <Link to='/auth/login'>로그인</Link>
+          <Button type="submit">가입하기</Button>
+          <Link to="/auth/login">로그인</Link>
         </BtnBox>
       </LoginForm>
     </Wrapper>
@@ -64,7 +64,7 @@ const Wrapper = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Pretendard-Regular';
+  font-family: "Pretendard-Regular";
 `;
 
 const LoginForm = styled.div`

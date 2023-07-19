@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import api from "../api/post";
 import instance from '../api/post';
 import { useQuery } from 'react-query';
 
+
 function List() {
   const [posts, setPosts] = useState([]);
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
 
   const handleBtnClick = () => {
     if (localStorage.getItem('authorization') === null) {
@@ -34,8 +38,8 @@ function List() {
 
   // 클릭시 상세 페이지로 이동
   const handlePostClick = (id) => {
-    console.log('상세페이지', id);
-    navigate(`detail/${id}`);
+    console.log("상세페이지", id);
+    navigate(`/detail/${id}`);
   };
 
   return (
@@ -44,7 +48,8 @@ function List() {
         <Btn onClick={handleBtnClick}>글쓰기</Btn>
       </div>
       <Wrapper>
-        {posts.map((post) => (
+        {posts &&
+          posts.map((post) => (
           <ListBox key={post.id}>
             <div
               onClick={() => {
