@@ -1,7 +1,14 @@
 import React from "react";
+// import SearchForm from './SearchForm';
+// import SearchResults from './SearchResults';
 
 function Search() {
-  return <div>Search</div>;
+  return (
+    <div>
+      {/* <SearchForm />
+      <SearchResults /> */}
+    </div>
+  );
 }
 
 export default Search;
