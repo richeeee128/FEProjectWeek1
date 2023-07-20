@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import instance from '../api/post';
-import { useQuery } from 'react-query';
+
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import instance from "../api/post";
+import { useQuery } from "react-query";
+
 
 function List() {
   const [posts, setPosts] = useState([]);
@@ -10,12 +12,14 @@ function List() {
   const navigate = useNavigate();
 
   const handleBtnClick = () => {
+
     if (localStorage.getItem('authorization') === null) {
       navigate('/auth/login');
       alert('로그인 되지 않은 사용자입니다.');
     } else {
       navigate('/write');
       console.log('로그인 중입니다');
+
     }
   };
 
@@ -30,6 +34,7 @@ function List() {
     ['posts', currentPage],
     async () => {
       try {
+
         const response = await instance.get(`/post`, {
           // 페이지
           params: {
@@ -42,6 +47,7 @@ function List() {
         return response.data.info.content;
       } catch (error) {
         console.log('페이징을 불러올 수 없습니다.', error);
+
       }
     }
   );

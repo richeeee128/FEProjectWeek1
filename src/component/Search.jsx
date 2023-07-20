@@ -89,6 +89,7 @@ function Search({ onSearchResult }) {
         ))}
       </Wrapper>
     </>
+
   );
 }
 export default Search;
