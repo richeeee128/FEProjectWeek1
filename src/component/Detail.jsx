@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/post";
@@ -10,6 +11,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [post, setPost] = useState([]);
+
   const postId = id;
   const postState = post;
 
@@ -25,13 +27,14 @@ const Detail = () => {
   //   fetchPost();
   // }, []);
 
+
   const fetchPost = async () => {
     try {
       const response = await api.get(`/post/${id}`);
-      console.log("reponse.data.data", response);
+
       setPost(response.data.info);
     } catch (error) {
-      console.error("API 요청 오류:", error);
+      console.error('API 요청 오류:', error);
     }
   };
 
@@ -48,14 +51,15 @@ const Detail = () => {
   };
 
   const handleGoBackPage = (id) => {
-    if (id === "1") {
-      alert("첫번째 페이지입니다!");
+    if (id === '1') {
+      alert('첫번째 페이지입니다!');
       return; // 첫 번째 요소이면 함수 실행을 중지하고 종료합니다.
     } else {
       const previousId = parseInt(id) - 1;
       navigate(`/detail/${previousId}`);
     }
   };
+
 
   const onDeletePost = async () => {
     try {
@@ -88,6 +92,7 @@ const Detail = () => {
   //   navigate(`/detail/${nextId}`);
   // };
 
+
   //state로 값이 저장되있어 async(id,contents)로 안 받아도 됨
 
   return (
@@ -98,9 +103,10 @@ const Detail = () => {
           <div>
             <button onClick={() => handleGoBackPage(id)}>이전 페이지</button>
             {/* <button onClick={() => handleNextPage(id)}>다음 페이지</button> */}
-            <a href="#" className="button" onClick={handlePostClick}>
+            <a href='#' className='button' onClick={handlePostClick}>
               글 목록으로 돌아가기
             </a>
+
             <button onClick={(e) => onDeletePost()}>글 삭제</button>
             <h1>
               <img src={post.image} alt="" />
@@ -115,6 +121,7 @@ const Detail = () => {
               <LikeDisLike postId={postId} />
             </div>
             <CommentForm postId={postId} />
+
           </div>
         </SectionContainer>
       </PageContainer>

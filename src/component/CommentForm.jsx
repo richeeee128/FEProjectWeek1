@@ -17,9 +17,11 @@ const CommentForm = ({ postId }) => {
     fetchPost();
   }, []);
 
+
   const fetchPost = async () => {
     try {
       const response = await api.get(`/post/${postId}`);
+
       setPost(response.data.info);
     } catch (error) {
       console.error("API 요청 오류:", error);
@@ -27,39 +29,48 @@ const CommentForm = ({ postId }) => {
   };
 
   //댓글 추가함수
+
   const onSUbmitHandler = async (e) => {
     e.preventDefault();
     console.log(commentValue);
     try {
       const res = await api.post(`/post/${postId}/comment`, commentValue);
 
+
       console.log(res);
       setCommentValue("");
       fetchPost();
     } catch (error) {
       console.error("코멘트API Post 요청 오류:", error);
+
+
     }
   };
 
   //댓글 삭제함수
   const onDeleteComment = async ({ commentId }) => {
+
     console.log("commentId", commentId);
     if (commentId === undefined) {
       console.error("삭제할 댓글이 유효하지 않습니다.");
+
       return;
     }
     try {
       await api.delete(`/post/${postId}/comment/${commentId}`);
+
       console.log("삭제되었습니다!");
       setPost("");
       fetchPost();
     } catch (error) {
       alert("댓글에 대한 권한이 없습니다.");
       console.error("댓글 삭제 오류:", error);
+
     }
   };
 
   //댓글 수정함수
+
 
   //토글 폼을 띄움. 버튼보이게 하고, 다시누르면 취소되고 빈값됨.
   const toggleCommentForm = () => {
@@ -109,6 +120,7 @@ const CommentForm = ({ postId }) => {
           }}
         />
         <button type="submit">댓글 작성</button>
+
       </CommentFormStyle>
       <h3>댓글</h3>
       <SectionStyle>

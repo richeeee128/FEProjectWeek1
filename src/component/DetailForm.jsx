@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "./Header";
@@ -14,6 +15,7 @@ const DetailForm = () => {
   const onSubmitHandler = async (event, title, content, file) => {
     if (title === "" || content === "") {
       alert("제목과 내용을 입력해주세요.");
+
       return;
     }
 
@@ -25,6 +27,7 @@ const DetailForm = () => {
     };
 
     postFormData.append(
+
       "data",
       new Blob([JSON.stringify(data)], { type: "application/json" })
     );
@@ -51,6 +54,7 @@ const DetailForm = () => {
       // 요청에 대한 응답 처리
     } catch (error) {
       console.error("Error:", error);
+
       // 에러 처리
     }
     // setTitle("");
@@ -64,12 +68,16 @@ const DetailForm = () => {
     }
   };
 
+  const onClickMain = () => navigate('/');
+
   return (
-    <div>
+    <>
       <Header />
       <SectionWrapper>
+
         {/* <SectionStyle> */}
         <form
+
           onSubmit={(event) => {
             event.preventDefault();
             // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
@@ -77,16 +85,19 @@ const DetailForm = () => {
           }}
         >
           <FormGroup>
+
             <label htmlFor="title">제목:</label>
             <input
               className="TitletInput"
               type="text"
               id="title"
               name="title"
+
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
               }}
+
               placeholder="Enter a title..."
               required
             />{" "}
@@ -98,10 +109,12 @@ const DetailForm = () => {
               type="text"
               id="content"
               name="content"
+
               value={content}
               onChange={(e) => {
                 setContent(e.target.value);
               }}
+
               placeholder="Enter content..."
               required
             />{" "}
@@ -122,8 +135,9 @@ const DetailForm = () => {
           </FormGroup>
         </form>
         {/* </SectionStyle> */}
+
       </SectionWrapper>
-    </div>
+    </>
   );
 };
 
@@ -140,42 +154,43 @@ const FormGroup = styled.div`
   overflow-x: hidden; /* 가로 스크롤 숨김 */
   overflow-y: auto; /* 세로 스크롤 표시 */
 
+
   .file-input {
     /* 스타일을 원하는 대로 수정하세요 */
     padding: 10px 15px;
     background-color: #eaeaea;
     border: none;
     border-radius: 5px;
-    color: #333;
+    color: #4a3f6f;
     font-size: 16px;
   }
   label {
-    margin-bottom: 10px;
-    margin-right: 10px;
-    flex: 0 0 auto; /* 너비를 고정으로 유지 */
+    /* margin-bottom: 10px; */
+    margin: 5px;
+    flex: 0 0 auto;
+    /* 너비를 고정으로 유지 */
+    color: #4a3f6f;
+    font-size: 1.1rem;
+    font-weight: bold;
+
   }
 
-  input {
-    padding: 5px;
+
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
+    height: 50px;
     margin-bottom: 10px;
   }
 
-  input[type="text"],
   textarea {
-    flex: 1;
     /* input 요소의 스타일을 원하는 대로 수정하세요 */
-    padding: 5px;
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%; /* input 요소가 컨테이너의 너비를 꽉 채우도록 설정 */
+    width: 100%;
+    height: 200px;
   }
 
-  textarea {
-    height: 150px; /* 내용 input의 높이를 조정 */
-  }
 
   button {
     padding: 8px 16px;
@@ -190,6 +205,7 @@ const FormGroup = styled.div`
     margin-left: 10px;
   }
 `;
+
 
 const SectionWrapper = styled.div`
   max-width: 600px;
@@ -216,6 +232,22 @@ const SectionStyle = styled.section`
 
   /* text-align: center; */
   padding: 20px;
+
+const BtnWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 `;
 
-export default DetailForm;
+const Btn = styled.button`
+  padding: 8px 16px;
+  background-color: #0efbdf;
+  color: #2b2a2a;
+  text-decoration: none;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px;
+
+`;

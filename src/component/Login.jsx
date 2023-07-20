@@ -1,36 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import instunce from "../api/post";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import instunce from '../api/post';
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (username && password) {
       try {
-        const response = await instunce.post("/auth/login", {
+        const response = await instunce.post('/auth/login', {
           username,
           password,
         });
-        setUsername("");
-        setPassword("");
-        console.log("response", response);
+        setUsername('');
+        setPassword('');
+        console.log('response', response);
 
         if (response.status === 200) {
           // const { token } = response.data;
           // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          let jwtToken = response.headers.get("authorization");
-          localStorage.setItem("authorization", jwtToken);
-          alert("로그인 성공");
+          let jwtToken = response.headers.get('authorization');
+          localStorage.setItem('authorization', jwtToken);
+          alert('로그인 성공');
 
-          navigate("/");
+          navigate('/');
           return response;
         } else {
-          alert("로그인 실패");
+          alert('로그인 실패');
         }
       } catch (error) {
         console.log(error);
@@ -44,23 +44,25 @@ function Login() {
         <h1>로그인</h1>
         <InputBox>
           <Input
-            type="text"
-            placeholder="아이디를 입력해주세요."
+            type='text'
+            placeholder='아이디를 입력해주세요.'
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <Input
-            type="password"
-            placeholder="비밀번호를 입력해주세요."
+            type='password'
+            placeholder='비밀번호를 입력해주세요.'
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </InputBox>
         <BtnBox>
-          <Button type="submit">로그인</Button>
-          {/* <Link to='/auth/signup'>회원가입</Link> */}
+          <Button type='submit'>로그인</Button>
+          <Link to='/auth/signup'>
+            <Button>회원가입</Button>
+          </Link>
         </BtnBox>
       </LoginForm>
     </Wrapper>
@@ -76,7 +78,7 @@ const Wrapper = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: "Pretendard-Regular";
+  font-family: 'Pretendard-Regular';
 `;
 
 const LoginForm = styled.div`
