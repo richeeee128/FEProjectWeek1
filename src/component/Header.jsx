@@ -1,17 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 function Header() {
+  const navigate = useNavigate();
+  const mainHandler = () => {
+    navigate('/');
+  };
+
   return (
-    <div>
-      <HeaderStyle>
-        <Title> GG 게임 리뷰</Title>
-      </HeaderStyle>
-    </div>
+    <HeaderStyle onClick={mainHandler}>
+      <Title> GG 게임 리뷰</Title>
+    </HeaderStyle>
   );
 }
 
-const HeaderStyle = styled.header`
+const HeaderStyle = styled.div`
   height: 100px;
   background-color: #4a3f6f;
   padding: 10px;

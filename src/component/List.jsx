@@ -1,10 +1,8 @@
-
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import instance from "../api/post";
-import { useQuery } from "react-query";
-
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import instance from '../api/post';
+import { useQuery } from 'react-query';
 
 function List() {
   const [posts, setPosts] = useState([]);
@@ -12,14 +10,12 @@ function List() {
   const navigate = useNavigate();
 
   const handleBtnClick = () => {
-
     if (localStorage.getItem('authorization') === null) {
       navigate('/auth/login');
       alert('로그인 되지 않은 사용자입니다.');
     } else {
       navigate('/write');
       console.log('로그인 중입니다');
-
     }
   };
 
@@ -30,11 +26,11 @@ function List() {
   };
 
   //백에서 데이터를 받아 페이지네이션을 함
+
   const { data, isLoading, error } = useQuery(
     ['posts', currentPage],
     async () => {
       try {
-
         const response = await instance.get(`/post`, {
           // 페이지
           params: {
@@ -47,24 +43,55 @@ function List() {
         return response.data.info.content;
       } catch (error) {
         console.log('페이징을 불러올 수 없습니다.', error);
-
       }
     }
   );
-
-  // 로딩과 에러가 없으면 이전 포스트들과 데이터를 합침
   useEffect(() => {
-    if (!isLoading && !error) {
-      setPosts((prevPosts) => [...prevPosts, ...data]);
+    let isMounted = true;
+
+    if (!isLoading && !error && isMounted) {
+      // 이전 포스트와 새로운 포스트를 합치되, 중복을 제거하여 설정
+      setPosts((prevPosts) => {
+        const updatedPosts = [...prevPosts, ...data];
+        return Array.from(new Set(updatedPosts.map((post) => post.id))).map(
+          (id) => {
+            return updatedPosts.find((post) => post.id === id);
+            // return Array.from(new Set(updatedPosts.map((post) => post.id))).map(
+            //   (id) => {
+            //     return updatedPosts.find((post) => post.id === id);
+          }
+        );
+      });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [data, isLoading, error]);
+  // 로딩과 에러가 없으면 이전 포스트들과 데이터를 합침
+  // useEffect(() => {
+  //   if (!isLoading && !error) {
+  //     setPosts((prevPosts) => [...prevPosts, ...data]);
+  //   }
+  //   // setPosts();
+  // }, [data, isLoading, error]);
 
   // useEffect(() => {
-  //   setPosts();
-  // }, []);
+  //   let isMounted = true; // 컴포넌트가 마운트된 상태인지 확인하는 플래그 변수
+
+  //   if (!isLoading && !error && isMounted) {
+  //     setPosts((prevPosts) => [...prevPosts, ...data]);
+  //   }
+
+  //   // 컴포넌트가 마운트된 경우 상태 업데이트를 피하기 위한 정리 함수
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [data, isLoading, error]);
 
   // 버튼 클릭시 페이지에 1을 더함
   const fetchMoreData = () => {
+    console.log('fetchMoreData called');
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
@@ -83,7 +110,7 @@ function List() {
                 }}
               >
                 <h1>
-                  {post.image === '' ? (
+                  {post.image === null || post.image === '' ? (
                     <img
                       src='https://cdn.pixabay.com/photo/2021/12/30/12/09/gaming-computer-6903836_1280.jpg'
                       alt='이미지가 존재하지 않습니다.'
