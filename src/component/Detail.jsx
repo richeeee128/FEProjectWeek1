@@ -14,16 +14,6 @@ const Detail = () => {
   const postState = post;
 
   console.log('id', id);
-  // const fetchPost = async () => {
-  //   const { data } = await api.get(`/post`);
-  //   console.log("data", data);
-  //   setPost(data);
-  // };
-
-  // useEffect(() => {
-  //   //db 로부터 값을 가져올 것이다.
-  //   fetchPost();
-  // }, []);
 
   const fetchPost = async () => {
     try {
@@ -68,28 +58,6 @@ const Detail = () => {
     }
   };
 
-  // // 객체의 모든 id 값들을 배열로 추출
-  // const ids = Object.values(post).map((post) => post.id);
-
-  // // 가장 큰 id 값을 구함
-  // const maxId = ids.length > 0 ? Math.max(...ids) : 0;
-
-  // console.log("maxId", maxId); // 가장 큰 id 값을 출력합니다.
-
-  // const handleNextPage = (id) => {
-  //   const nextId = parseInt(id) + 1;
-  //   const lastPostId = post[post.length - 1].id;
-
-  //   if (id === lastPostId) {
-  //     alert("마지막 페이지입니다!");
-  //     return;
-  //   }
-
-  //   navigate(`/detail/${nextId}`);
-  // };
-
-  //state로 값이 저장되있어 async(id,contents)로 안 받아도 됨
-
   return (
     <>
       <Header />
@@ -114,6 +82,7 @@ const Detail = () => {
           <StPost id='post-date'>
             작성일: {new Date(post.createdAt).toLocaleDateString()}
           </StPost>
+          <CommentForm postId={postId} />
         </SectionStyle>
       </Container>
     </>

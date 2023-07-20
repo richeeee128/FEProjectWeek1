@@ -21,8 +21,6 @@ function Login() {
         console.log('response', response);
 
         if (response.status === 200) {
-          // const { token } = response.data;
-          // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           let jwtToken = response.headers.get('authorization');
           localStorage.setItem('authorization', jwtToken);
           alert('로그인 성공');

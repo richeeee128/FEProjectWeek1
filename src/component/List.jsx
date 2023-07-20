@@ -68,26 +68,6 @@ function List() {
       isMounted = false;
     };
   }, [data, isLoading, error]);
-  // 로딩과 에러가 없으면 이전 포스트들과 데이터를 합침
-  // useEffect(() => {
-  //   if (!isLoading && !error) {
-  //     setPosts((prevPosts) => [...prevPosts, ...data]);
-  //   }
-  //   // setPosts();
-  // }, [data, isLoading, error]);
-
-  // useEffect(() => {
-  //   let isMounted = true; // 컴포넌트가 마운트된 상태인지 확인하는 플래그 변수
-
-  //   if (!isLoading && !error && isMounted) {
-  //     setPosts((prevPosts) => [...prevPosts, ...data]);
-  //   }
-
-  //   // 컴포넌트가 마운트된 경우 상태 업데이트를 피하기 위한 정리 함수
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [data, isLoading, error]);
 
   // 버튼 클릭시 페이지에 1을 더함
   const fetchMoreData = () => {
