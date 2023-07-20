@@ -1,25 +1,21 @@
-
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import api from "../api/post";
-import instance from '../api/post';
-import { useQuery } from 'react-query';
 
+import instance from "../api/post";
+import { useQuery } from "react-query";
 
 function List() {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
-
   const handleBtnClick = () => {
-    if (localStorage.getItem('authorization') === null) {
-      navigate('/auth/login');
-      console.log('로그인 하고 오세요');
+    if (localStorage.getItem("authorization") === null) {
+      navigate("/auth/login");
+      console.log("로그인 하고 오세요");
     } else {
-      navigate('/newpost');
-      console.log('로그인 중입니다');
+      navigate("/write");
+      console.log("로그인 중입니다");
     }
   };
 
@@ -28,10 +24,10 @@ function List() {
     queryFn: async () => {
       try {
         const { data } = await instance.get(`/post`);
-        setPosts(data.data.content);
-        console.log('data', data.data.content);
+        setPosts(data.info.content);
+        console.log("data", data.info.content);
       } catch (error) {
-        console.log('Error fetching posts:', error);
+        console.log("Error fetching posts:", error);
       }
     },
   });
@@ -50,26 +46,26 @@ function List() {
       <Wrapper>
         {posts &&
           posts.map((post) => (
-          <ListBox key={post.id}>
-            <div
-              onClick={() => {
-                handlePostClick(post.id);
-              }}
-            >
-              <h1>
-                <img src={post.image} alt='' />
-              </h1>
-              <h2>{post.title}</h2>
-              <h4>
-                {post.content.length > 200
-                  ? `${post.content.slice(0, 200)} ...더보기`
-                  : post.content}
-              </h4>
-              <p>{post.username}</p>
-              <p>{post.liked} ❤️</p>
-            </div>
-          </ListBox>
-        ))}
+            <ListBox key={post.id}>
+              <div
+                onClick={() => {
+                  handlePostClick(post.id);
+                }}
+              >
+                <h1>
+                  <img src={post.image} alt="" />
+                </h1>
+                <h2>{post.title}</h2>
+                <h4>
+                  {post.content.length > 200
+                    ? `${post.content.slice(0, 200)} ...더보기`
+                    : post.content}
+                </h4>
+                <p>{post.username}</p>
+                <p>{post.liked} ❤️</p>
+              </div>
+            </ListBox>
+          ))}
       </Wrapper>
     </>
   );

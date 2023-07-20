@@ -1,12 +1,12 @@
-import React from 'react';
-import SearchForm from './SearchForm';
-import SearchResults from './SearchResults';
+import React from "react";
+// import SearchForm from './SearchForm';
+// import SearchResults from './SearchResults';
 
 function Search() {
   return (
     <div>
-      <SearchForm />
-      <SearchResults />
+      {/* <SearchForm />
+      <SearchResults /> */}
     </div>
   );
 }

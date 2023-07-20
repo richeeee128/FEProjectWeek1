@@ -1,76 +1,144 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "./Header";
+import axios from "axios";
+import api from "../api/post";
+import { useNavigate } from "react-router-dom";
 
-const DetailForm = ({ onSubmit }) => {
+const DetailForm = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [file, setFile] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 제출 시 onSubmit 콜백 함수 호출
-    onSubmit({ title, content });
-    // 폼 초기화
-    setTitle("");
-    setContent("");
+  const onSubmitHandler = async (event, title, content, file) => {
+    if (title === "" || content === "") {
+      alert("제목과 내용을 입력해주세요.");
+      return;
+    }
+
+    const postFormData = new FormData();
+
+    const data = {
+      title: title,
+      content: content,
+    };
+
+    postFormData.append(
+      "data",
+      new Blob([JSON.stringify(data)], { type: "application/json" })
+    );
+    postFormData.append("file", file);
+    /*
+    multipart/form-data
+    {
+      data : {
+        title: "title",
+        content: "content"
+        [[type]] = application/json
+      },
+      file : imageFile : File
+    }
+    */
+    try {
+      const response = await api.post(`/post/newpost`, postFormData);
+      navigate(`/`); // 이동
+      setTitle("");
+      setContent("");
+      setFile(null);
+
+      console.log(response);
+      // 요청에 대한 응답 처리
+    } catch (error) {
+      console.error("Error:", error);
+      // 에러 처리
+    }
+    // setTitle("");
+    // setContent("");
+  };
+  const handleFileUpload = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      // onSubmitHandler(event, title, content, file); // 전송
+    }
   };
 
   return (
     <div>
       <Header />
       <SectionWrapper>
-        <SectionStyle>
-          <WriteFormStyle enctype="multipart/form-data" onSubmit={handleSubmit}>
-            <label for="title">제목:</label>
+        {/* <SectionStyle> */}
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
+            onSubmitHandler(event, title, content, file);
+          }}
+        >
+          <FormGroup>
+            <label htmlFor="title">제목:</label>
             <input
+              className="TitletInput"
               type="text"
               id="title"
               name="title"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               placeholder="Enter a title..."
               required
-            />
-
-            <label for="content">내용:</label>
+            />{" "}
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="content">내용:</label>
             <textarea
+              className="ContentInput"
+              type="text"
               id="content"
               name="content"
-              placeholder="Enter the content..."
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
+              placeholder="Enter content..."
               required
-            />
-
-            <label for="image">Image 업로드:</label>
+            />{" "}
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="file">파일:</label>
             <input
               type="file"
-              class="file-input"
+              className="file-input"
               id="image"
               name="image"
               accept="image/*"
+              onChange={handleFileUpload}
             />
             <button className="write-form button" type="submit">
               글 작성
             </button>
-          </WriteFormStyle>
-        </SectionStyle>
+          </FormGroup>
+        </form>
+        {/* </SectionStyle> */}
       </SectionWrapper>
     </div>
   );
 };
 
-const LabelStyle = styled.label`
-  font-size: 50px;
-`;
-
-const WriteFormStyle = styled.form`
-  gap: 10px;
-  margin: 20px auto;
-  display: flex;
-  margin: 20px auto;
-  display: flex;
+const FormGroup = styled.div`
+  background-color: yellow;
+  overflow: auto;
   flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
   justify-content: center;
-  align-items: flex-end;
+  align-content: center;
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: hidden; /* 가로 스크롤 숨김 */
+  overflow-y: auto; /* 세로 스크롤 표시 */
 
   .file-input {
     /* 스타일을 원하는 대로 수정하세요 */
@@ -81,17 +149,35 @@ const WriteFormStyle = styled.form`
     color: #333;
     font-size: 16px;
   }
-
-  .textarea {
-    width: 85%;
-    height: 30px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    resize: vertical;
+  label {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    flex: 0 0 auto; /* 너비를 고정으로 유지 */
   }
 
-  .button {
+  input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  input[type="text"],
+  textarea {
+    flex: 1;
+    /* input 요소의 스타일을 원하는 대로 수정하세요 */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* input 요소가 컨테이너의 너비를 꽉 채우도록 설정 */
+  }
+
+  textarea {
+    height: 150px; /* 내용 input의 높이를 조정 */
+  }
+
+  button {
     padding: 8px 16px;
     background-color: #0efbdf;
     color: #2b2a2a;
@@ -103,23 +189,31 @@ const WriteFormStyle = styled.form`
     cursor: pointer;
     margin-left: 10px;
   }
-
-  > button.write-form button:hover {
-    background-color: #45a049;
-  }
 `;
 
 const SectionWrapper = styled.div`
+  max-width: 600px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
   display: flex;
   justify-content: center;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const SectionStyle = styled.section`
   margin-top: 40px;
   width: 800px;
+  max-width: 600px;
   height: 200px;
   background-color: #f2f2f2;
   border: 1px solid #ccc;
+
   /* text-align: center; */
   padding: 20px;
 `;

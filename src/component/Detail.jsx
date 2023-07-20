@@ -4,17 +4,16 @@ import api from "../api/post";
 import styled from "styled-components";
 import Header from "./Header";
 import CommentForm from "./CommentForm";
+import LikeDisLike from "./LikeDisLike";
 
 const Detail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [post, setPost] = useState([]);
-  const [commentValue, setCommentValue] = useState({
-    content: "",
-  });
-  const [updateCommentValue, setUpdateCommentValue] = useState({
-    content: "",
-  });
+  const postId = id;
+  const postState = post;
+
+  console.log("id", id);
   // const fetchPost = async () => {
   //   const { data } = await api.get(`/post`);
   //   console.log("data", data);
@@ -29,12 +28,13 @@ const Detail = () => {
   const fetchPost = async () => {
     try {
       const response = await api.get(`/post/${id}`);
-      console.log("reponse.data.data", response.data.data);
-      setPost(response.data.data);
+      console.log("reponse.data.data", response);
+      setPost(response.data.info);
     } catch (error) {
       console.error("API 요청 오류:", error);
     }
   };
+
   useEffect(() => {
     fetchPost();
   }, []);
@@ -54,6 +54,17 @@ const Detail = () => {
     } else {
       const previousId = parseInt(id) - 1;
       navigate(`/detail/${previousId}`);
+    }
+  };
+
+  const onDeletePost = async () => {
+    try {
+      await api.delete(`/post/${id}`);
+      console.log("삭제되었습니다!");
+      navigate(`/`);
+    } catch (error) {
+      alert("포스트에 대한 권한이 없습니다.");
+      console.error("댓글 삭제 오류:", error);
     }
   };
 
@@ -77,59 +88,6 @@ const Detail = () => {
   //   navigate(`/detail/${nextId}`);
   // };
 
-  //확인용
-  // console.log("post.commentList", post.commentList);
-  // console.log("post", post);
-  // console.log("commentValue", commentValue);
-
-  // 댓글폼 제출
-  const onSUbmitHandler = async (e) => {
-    e.preventDefault();
-    console.log(commentValue);
-    try {
-      const res = await api.post(`/post/${id}/comment`, commentValue);
-      fetchPost();
-      console.log(res);
-      // setCommentValue("");
-    } catch (error) {
-      console.error("코멘트API Post 요청 오류:", error);
-    }
-  };
-
-  //댓글 삭제함수
-  const onDeleteComment = async ({ commentId }) => {
-    console.log("commentId", commentId);
-    if (commentId === undefined) {
-      console.error("삭제할 댓글이 유효하지 않습니다.");
-      return;
-    }
-    try {
-      await api.delete(`/post/${id}/comment/${commentId}`);
-      console.log("삭제되었습니다!");
-    } catch (error) {
-      alert("댓글에 대한 권한이 없습니다.");
-      console.error("댓글 삭제 오류:", error);
-    }
-  };
-
-  //댓글 수정함수
-  const onUpdateComment = async ({ commentId }) => {
-    console.log("수정할 commentId", commentId);
-    console.log("페이지 id", id);
-    if (commentId === undefined) {
-      console.error("수정할 댓글이 유효하지 않습니다.");
-      return;
-    }
-    try {
-      const updatedCommentValue = { content: "수정할 댓글의 내용" };
-      setUpdateCommentValue(updatedCommentValue);
-      await api.put(`/post/${id}/comment/${commentId}`, updateCommentValue);
-      console.log("수정되었습니다!");
-    } catch (error) {
-      alert("댓글에 대한 권한이 없습니다.");
-      console.error("댓글 수정 오류:", error);
-    }
-  };
   //state로 값이 저장되있어 async(id,contents)로 안 받아도 됨
 
   return (
@@ -143,152 +101,28 @@ const Detail = () => {
             <a href="#" className="button" onClick={handlePostClick}>
               글 목록으로 돌아가기
             </a>
-            <SectionStyle>
-              <h1>
-                <img src={post.image} alt="" />
-              </h1>
-              <h2 className="post-title">{post.title}</h2>
-              <p className="post-author">작성자: {post.username}</p>
-              <p className="post-date">작성일: {post.createdAt}</p>
-              <div className="post-content">
-                <p>{post.content}</p>
-              </div>
-            </SectionStyle>
-            <CommentFormBoxStyle>
-              <CommentFormStyle
-                className="comment-form"
-                onSubmit={(e) => {
-                  // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
-                  onSUbmitHandler(e);
-                }}
-              >
-                <div>
-                  {/*수정 영역*/}
-                  <textarea
-                    className="textarea"
-                    type="text"
-                    placeholder="수정할 내용을 작성해주세요...✨"
-                    // ={changeHandler}
-                    onChange={(e) => {
-                      setUpdateCommentValue({
-                        content: e.target.value,
-                      });
-                    }}
-                  ></textarea>
-                  <button type="submit">수정</button>
-                </div>
-              </CommentFormStyle>
-            </CommentFormBoxStyle>
-
-            <CommentFormBoxStyle>
-              <CommentFormStyle
-                className="comment-form"
-                onSubmit={(e) => {
-                  // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장(POST요청)
-                  onSUbmitHandler(e);
-                }}
-              >
-                <div>
-                  {/*입력 영역*/}
-                  <textarea
-                    className="textarea"
-                    type="text"
-                    placeholder="댓글을 작성해주세요...✨"
-                    // ={changeHandler}
-                    onChange={(e) => {
-                      setCommentValue({
-                        content: e.target.value,
-                      });
-                    }}
-                  ></textarea>
-                  <button type="submit">댓글 작성</button>
-                </div>
-              </CommentFormStyle>
-            </CommentFormBoxStyle>
-            <SectionStyle>
-              <h3>댓글</h3>
-              {post.commentList &&
-                post.commentList.map((comment) => (
-                  <>
-                    <div className="comment" key={comment.id}>
-                      <p className="comment-author">
-                        작성자:{comment.username}
-                      </p>
-                      <p className="comment-date">
-                        작성일: {comment.createdAt}
-                      </p>
-                      <div className="comment-content">{comment.content}</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        onUpdateComment({ commentId: comment.id });
-                      }}
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => {
-                        onDeleteComment({ commentId: comment.id });
-                      }}
-                    >
-                      삭제
-                    </button>
-                  </>
-                ))}
-
-              {/* 추가 댓글들을 여기에 추가하세요 */}
-            </SectionStyle>
+            <button onClick={(e) => onDeletePost()}>글 삭제</button>
+            <h1>
+              <img src={post.image} alt="" />
+            </h1>
+            <h2 className="post-title">{post.title}</h2>
+            <p className="post-author">작성자: {post.username}</p>
+            <p className="post-date">
+              작성일: {new Date(post.createdAt).toLocaleDateString()}
+            </p>
+            <div className="post-content">
+              <p>{post.content}</p>
+              <LikeDisLike postId={postId} />
+            </div>
+            <CommentForm postId={postId} />
           </div>
         </SectionContainer>
-        <footer>{/* 푸터 내용 추가 */}</footer>
       </PageContainer>
     </>
   );
 };
 
-const CommentFormBoxStyle = styled.section`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  background-color: #fefefe;
-  /* width: 700px;
-  height: 300px; */
-  border: 1px solid #ccc;
-  padding: 20px;
-`;
-const CommentFormStyle = styled.form`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: stretch;
-
-  .textarea {
-    flex-grow: 1;
-    width: 90%;
-    height: 39px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #fc0303;
-    resize: vertical;
-  }
-
-  button {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #4caf50;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #45a049;
-  }
-`;
+export default Detail;
 
 const PageContainer = styled.div`
   display: flex;
@@ -350,5 +184,3 @@ const SectionStyle = styled.section`
     margin-bottom: 20px;
   }
 `;
-
-export default Detail;
